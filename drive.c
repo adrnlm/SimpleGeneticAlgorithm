@@ -41,8 +41,9 @@ int main(int argc, char *argv[])
 	return EXIT_SUCCESS;
 }
 
-void test_pcbmill(void)
-{
+#ifdef DEBUG
+	void test_pcbmill(void)
+	{
 	Gene *gene, *mutant, *child, *parent1, *parent2;
 
 	/* Create a random pcbmill gene by calling create_rand_gene
@@ -84,8 +85,8 @@ void test_pcbmill(void)
 	gene_free(parent2);
 }
 
-void test_minfn(void)
-{
+	void test_minfn(void)
+	{
 	Gene *gene, *mutant, *child, *parent1, *parent2;
 
 	/* Create a random minfn gene by calling create_rand_gene
@@ -127,3 +128,4 @@ void test_minfn(void)
 	gene_free(parent2);
 }
 
+#endif

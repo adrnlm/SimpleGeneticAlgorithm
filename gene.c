@@ -21,7 +21,7 @@ int *create_pcbmill_chrom(int numAlleles)
 			randomValue = getRandomValue(numAlleles);
 		} while (contains(pcbmill_chrom, (index + 1), randomValue) == TRUE);
 		pcbmill_chrom[index] = randomValue;
-/* 		printf("Current value of index [%d] = %d\n", index, randomValue); DEBUG PURPOSES */
+		/* 		printf("Current value of index [%d] = %d\n", index, randomValue); DEBUG PURPOSES */
 		index++;
 	}
 	return pcbmill_chrom;

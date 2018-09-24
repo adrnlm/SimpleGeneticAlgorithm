@@ -26,10 +26,13 @@
 /* Avoid having 'magic numbers' when using argv ... */
 enum argtype {geneType = 1, alleleSize, popSize, numGen, inputFile, outputFile};
 
+#ifdef DEBUG
 /* Functions for testing creation of random genes, crossover and mutation.
  * These functions are only called if a DEBUG macro has been defined during
  * compilation */
 void test_pcbmill(void);
 void test_minfn(void);
+
+#endif
 
 #endif
