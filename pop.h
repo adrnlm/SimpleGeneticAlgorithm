@@ -1,6 +1,6 @@
 /******************************************************************************
 ** Student name: Adrian Lim Song En
-** Student number: 	...
+** Student number: s3710625
 ** Course: 			Advanced Programming Techniques - S2 2018
 ******************************************************************************/
 
