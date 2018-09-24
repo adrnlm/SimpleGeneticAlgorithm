@@ -19,4 +19,6 @@ typedef enum boolean
     TRUE
 } Boolean;
 
+void safeMalloc();
+
 #endif
