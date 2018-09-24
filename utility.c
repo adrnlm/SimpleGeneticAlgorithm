@@ -6,14 +6,14 @@
 
 #include "utility.h"
 
-void *safeMalloc(size_t)
+void * safeMalloc(size_t size)
 {
-  void * p = malloc(size);
+    void *p = malloc(size);
 
-  if (p == NULL)
-  {
-    perror(NULL);
-    exit(EXIT_FAILURE);
-  }
-  return p;
+    if (p == NULL)
+    {
+        perror(NULL);
+        exit(EXIT_FAILURE);
+    }
+    return p;
 }

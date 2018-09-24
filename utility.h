@@ -12,6 +12,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
+#include <assert.h>
 
 typedef enum boolean
 {
@@ -19,6 +20,6 @@ typedef enum boolean
     TRUE
 } Boolean;
 
-void safeMalloc();
+void * safeMalloc(size_t size);
 
 #endif

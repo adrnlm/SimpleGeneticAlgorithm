@@ -12,12 +12,14 @@
 
 #define MUTATE_RATE 5
 
-typedef struct pop_node {
+typedef struct pop_node
+{
 	Gene *gene;
 	struct pop_node *next;
 } Pop_node;
 
-typedef struct pop_list {
+typedef struct pop_list
+{
 	/* the head of the population list */
 	Pop_node *head;
 	/* the size of the population */

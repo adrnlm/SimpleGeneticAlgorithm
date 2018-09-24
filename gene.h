@@ -82,4 +82,9 @@ double gene_get_fitness(Gene *gene);
  * a gene, either to file or to standard output */
 void gene_print(Gene*);
 
+/* Checks to see if an array contains a specific value and returns Bool */
+Boolean contains(int *array, int arraySize, int value);
+
+int getRandomValue(int numAlleles);
+
 #endif

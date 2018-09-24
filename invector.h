@@ -33,7 +33,7 @@ typedef struct invector_table
 {
     /* Each row of the table will store one input vector
      * For example: input of
-     * 		InputVector:0(1,3,4,2,40)
+     * InputVector:0(1,3,4,2,40)
      * would store 1,3,4,2,40 in the first 5 indexes of the InVector at
      * table[0]
      * */

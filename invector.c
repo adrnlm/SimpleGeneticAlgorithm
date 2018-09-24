@@ -6,6 +6,11 @@
 
 #include "invector.h"
 
-void invector_init(InVTable *invt) {
+/* TODO File Reading / Writing here */
+
+void invector_init(InVTable *invt)
+{
 	/* TO DO */
 }
+
+
