@@ -1,4 +1,4 @@
-#**SIMPLE GENETIC ALGORITM**
+# **SIMPLE GENETIC ALGORITM**
 
 A **genetic algorithm** *(GA)* is a heuristic search technique inspired by natural selection. A population of candidate solutions to a problem is iteratively evolved towards an optimal solution (as measured by an evaluation function) by:
  - Evaluating the ‘fitness’ of candidate solutions according to the evaluation function
