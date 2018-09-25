@@ -44,7 +44,7 @@ Gene * mutate_minfn(Gene *g){
 	/*Checker*/
 	if ((mutated_gene = malloc(sizeof(Gene)))== NULL)
 	return NULL;
-	if ((mutated_gene->chromosome = malloc(sizeof(int) * g->numAlleles))== NULL)
+	if ((mutated_gene->chromosome = malloc(sizeof(int) * g->num_alleles))== NULL)
 	return NULL;
 
 	mutated_gene->chromosome = g->chromosome;
@@ -62,29 +62,29 @@ Gene * crossover_pcbmill(Gene *g1, Gene *g2){
 }
 
 Gene * crossover_minfn(Gene *g1, Gene *g2){
-	int crossoverPoint;
+	int crossoverPoint, debugPoint;
 	Gene *child_gene;
 
 	/*Debug purposes*/
 	#ifdef DEBUG
-	crossoverPoint = 2;
+	debugPoint = 2;
 	#else
-	crossoverPoint = rand() % g1->num_alleles;
+	debugPoint = rand() % g1->num_alleles;
 	#endif
 
 	/*Checker*/
 	if ((child_gene = malloc(sizeof(Gene)))== NULL)
 	return NULL;
-	if ((child_gene->chromosome = malloc(sizeof(int) * g1->numAlleles))== NULL)
+	if ((child_gene->chromosome = malloc(sizeof(int) * g1->num_alleles))== NULL)
 	return NULL;
 
 	/*Creating child gene*/
 	child_gene->chromosome = g1->chromosome;
-	for (crossoverPoint < g1->num_alleles; crossoverPoint++){
+	for (crossoverPoint = debugPoint; crossoverPoint < g1->num_alleles; crossoverPoint++){
 		child_gene->chromosome[crossoverPoint] = g2->chromosome[crossoverPoint];
 	}
-	mutated_gene->num_alleles = g->num_alleles;
-	mutated_gene->raw_score = mutated_gene->fitness = 0;
+	child_gene->num_alleles = g1->num_alleles;
+	child_gene->raw_score = child_gene->fitness = 0;
 
 	return child_gene;
 }
@@ -110,8 +110,8 @@ Gene * gene_create_rand_gene(int numAlleles, CreateFn create_chrom){
 	return NULL;
 
 	/*Create Random gene*/
-	random_gene->chromosome = create_chrom(num_alleles);
-	random_gene->num_alleles = num_alleles;
+	random_gene->chromosome = create_chrom(numAlleles);
+	random_gene->num_alleles = numAlleles;
 	random_gene->raw_score = random_gene->fitness = 0;
 
 	return random_gene;
@@ -126,8 +126,11 @@ void gene_normalise_fitness(Gene *gene, double total_fitness){
 }
 
 void gene_free(Gene *gene){
+	printf("TEST\n" );
 	free(gene->chromosome);
+	printf("TESTgs\n" );
 	free(gene);
+	printf("TESTg3\n" );
 }
 
 double gene_get_fitness(Gene *gene){
@@ -137,4 +140,14 @@ double gene_get_fitness(Gene *gene){
 
 void gene_print(Gene *gene) {
 	/* TO DO */
+	int counter;
+
+	printf("Chrom: ");
+	for (counter = 0; counter < gene->num_alleles; counter++){
+		if (counter < ((gene->num_alleles) - 1))
+			printf("%d, ", gene->chromosome[counter]);
+		else
+		printf("%d ", gene->chromosome[counter]);
+	}
+	printf("fit: %.3f, raw: %.3f \n", gene->fitness, gene->raw_score);
 }
