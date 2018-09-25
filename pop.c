@@ -6,19 +6,16 @@
 
 #include "pop.h"
 
-Boolean pop_init(Pop_list **pop)
-{
+Boolean pop_init(Pop_list **pop){
 	/* TO DO */
 	return FALSE;
 }
 
-void pop_set_fns(Pop_list *p,CreateFn cf,MutateFn mf,CrossOverFn cof,EvalFn ef)
-{
+void pop_set_fns(Pop_list *p,CreateFn cf,MutateFn mf,CrossOverFn cof,EvalFn ef){
 	/* TO DO */
 }
 
-void pop_print_fittest(Pop_list *p)
-{
+void pop_print_fittest(Pop_list *p){
 	/* TO DO */
 }
 

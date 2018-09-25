@@ -12,14 +12,11 @@
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
-#include <assert.h>
 
 typedef enum boolean
 {
     FALSE = 0,
     TRUE
 } Boolean;
-
-void * safeMalloc(size_t size);
 
 #endif

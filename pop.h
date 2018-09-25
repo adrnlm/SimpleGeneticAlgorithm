@@ -12,14 +12,12 @@
 
 #define MUTATE_RATE 5
 
-typedef struct pop_node
-{
+typedef struct pop_node {
 	Gene *gene;
 	struct pop_node *next;
 } Pop_node;
 
-typedef struct pop_list
-{
+typedef struct pop_list {
 	/* the head of the population list */
 	Pop_node *head;
 	/* the size of the population */
@@ -40,7 +38,7 @@ Boolean pop_init(Pop_list **);
 /* Set the function pointers of a population list */
 void pop_set_fns(Pop_list *p,CreateFn cf,MutateFn mf,CrossOverFn cof,EvalFn ef);
 
-/* This function causes details of the fittest gene of the generation to
+/* This function causes details of the fittest gene of the generation to 
  * be printed out.
  * The function also prints out the number of the current generation.
  * This function must not be able to access any generation value outside
