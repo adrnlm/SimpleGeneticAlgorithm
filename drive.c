@@ -32,13 +32,21 @@ void test_pcbmill(void){
 	/* TO DO - create 2 random pcbmill 'parent' genes using calls
 		 to create_rand_gene
 		 The length of the gene's chromosome should be TEST_ALLELE_LEN */
+	gene1 = gene_create_rand_gene(TEST_ALLELE_LEN, create_pcbmill_chrom);
+	gene2 = gene_create_rand_gene(TEST_ALLELE_LEN, create_pcbmill_chrom);
 	/* TO DO - print each gene */
+	gene_print(gene1);
+	gene_print(gene2);
 	printf("\nCrossover: ");
 	/* TO DO produce a new gene by calling crossover_pcbmill
 		 with the parent genes */
+	gene1 = crossover_pcbmill(gene1, gene2);
 	/* TO DO - print the new gene */
+	gene_print(gene1);
 	printf("\n");
 	/* TO DO - free both parents and the child gene */
+	gene_free(gene2);
+	gene_free(gene1);
 }
 
 void test_minfn(void){

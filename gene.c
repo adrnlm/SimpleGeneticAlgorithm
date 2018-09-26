@@ -10,8 +10,6 @@ int * create_pcbmill_chrom(int numAlleles){
 	int counter, *chromosome, randomValue;
 
 	/*Memory Allocation*/
-	/*if ((chromosome = malloc(sizeof(int) * numAlleles))==NULL)
-	return NULL;*/
 	chromosome = safeMalloc(sizeof(int) * numAlleles);
 
 	for (counter = 0; counter < numAlleles; counter++){
@@ -27,8 +25,6 @@ int * create_minfn_chrom(int numAlleles){
 	int counter, *chromosome;
 
 	/*Memory Allocation*/
-	/*if ((chromosome = malloc(sizeof(int) * numAlleles))==NULL)
-	return NULL;*/
 	chromosome = safeMalloc(sizeof(int) * numAlleles);
 
 	for (counter = 0; counter < numAlleles; counter ++ )
@@ -39,10 +35,10 @@ int * create_minfn_chrom(int numAlleles){
 }
 
 Gene * mutate_pcbmill(Gene *g){
-	/* TO DO */
 	Gene *mutated_gene;
 	int mutationPoint1, mutationPoint2, counter=0, tempPoint;
 
+	/*Debug purposes*/
 	#ifdef DEBUG
 	mutationPoint1 = 2;
 	mutationPoint2 = 4;
@@ -75,7 +71,6 @@ Gene * mutate_pcbmill(Gene *g){
 }
 
 Gene * mutate_minfn(Gene *g){
-	/* TO DO */
 	Gene *mutated_gene;
 	int mutatationPoint, counter=0;
 
@@ -87,10 +82,6 @@ Gene * mutate_minfn(Gene *g){
 	printf(" index: %d\n", mutatationPoint );
 
 	/*Memory Allocation*/
-	/*if ((mutated_gene = malloc(sizeof(Gene))) == NULL)
-	return NULL;
-	if ((mutated_gene->chromosome = malloc(sizeof(int) * g->num_alleles)) == NULL)
-	return NULL;*/
 	mutated_gene = safeMalloc(sizeof(Gene));
 	mutated_gene->chromosome = safeMalloc(sizeof(int) * g->num_alleles);
 
@@ -107,8 +98,44 @@ Gene * mutate_minfn(Gene *g){
 }
 
 Gene * crossover_pcbmill(Gene *g1, Gene *g2){
-	/* TO DO */
-	return NULL;
+	int crossoverPoint1, crossoverPoint2, counter, stopPoint;
+	Gene *child_gene;
+
+	/*Debug purposes*/
+	#ifdef DEBUG
+	crossoverPoint1 = 2;
+	crossoverPoint2 = 4;
+	#else
+	crossoverPoint1 = rand() % g2->num_alleles;
+	do {
+		crossoverPoint2 = rand() % g1->num_alleles;
+	} while((crossoverPoint1 == crossoverPoint2) && (crossoverPoint1 > crossoverPoint2));
+	#endif
+	printf(" index1: %d index2: %d\n", crossoverPoint1, crossoverPoint2 );
+
+	/*Memory Allocation*/
+	child_gene = safeMalloc(sizeof(Gene));
+	child_gene->chromosome = safeMalloc(sizeof(int) * g1->num_alleles);
+
+	/*Determining the size of chromosomes to crossover*/
+	int sizeOfCrossover = (crossoverPoint2 - crossoverPoint1)+ZERO_PLACE;
+
+	/*Copying data from g1 point1 -> point2 and placing it into child _gene */
+	for (counter = 0; counter < sizeOfCrossover; counter++){
+		child_gene->chromosome[counter] = g1->chromosome[counter+crossoverPoint1];
+		stopPoint = counter;
+	}
+	/*Finding the rest of the child_gene from g2 */
+	for (counter = 0; counter < g1->num_alleles; counter++){
+		if((checkValue(child_gene->chromosome, g1->num_alleles, g2->chromosome[counter])) == TRUE){
+			child_gene->chromosome[stopPoint+ZERO_PLACE] = g2->chromosome[counter];
+			stopPoint++;
+		}
+	}
+	child_gene->num_alleles = g1->num_alleles;
+	child_gene->raw_score = child_gene->fitness = 0;
+
+	return child_gene;
 }
 
 Gene * crossover_minfn(Gene *g1, Gene *g2){
@@ -124,10 +151,6 @@ Gene * crossover_minfn(Gene *g1, Gene *g2){
 	printf(" index: %d\n", Point-1 );
 
 	/*Memory Allocation*/
-	/*if ((child_gene = malloc(sizeof(Gene)))== NULL)
-	return NULL;
-	if ((child_gene->chromosome = malloc(sizeof(int) * g1->num_alleles))== NULL)
-	return NULL;*/
 	child_gene = safeMalloc(sizeof(Gene));
 	child_gene->chromosome = safeMalloc(sizeof(int) * g1->num_alleles);
 
@@ -153,14 +176,9 @@ double eval_minfn(InVTable *invt, Gene *gene){
 }
 
 Gene * gene_create_rand_gene(int numAlleles, CreateFn create_chrom){
-	/* TO DO */
 	Gene *random_gene;
 
 	/*Memory Allocation*/
-	/*if ((random_gene = malloc(sizeof(Gene)))== NULL)
-	return NULL;
-	if ((random_gene->chromosome = malloc(sizeof(int) * numAlleles))== NULL)
-	return NULL;*/
 	random_gene = safeMalloc(sizeof(Gene));
 	random_gene->chromosome = safeMalloc(sizeof(int) * numAlleles);
 
@@ -191,7 +209,6 @@ double gene_get_fitness(Gene *gene){
 }
 
 void gene_print(Gene *gene) {
-	/* TO DO */
 	int counter;
 
 	printf("Chrom: ");

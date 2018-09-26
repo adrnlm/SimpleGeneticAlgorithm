@@ -12,6 +12,7 @@
 /* Alleles in the chromosome for the MINFUNCT problem can have values
  * in the range 0..29 (inclusive) */
 #define MINFN_MAX 29
+#define ZERO_PLACE 1
 
 typedef struct gene
 {
