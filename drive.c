@@ -12,17 +12,19 @@
 #ifdef DEBUG
 void test_pcbmill(void){
 	/* TO DO */
-
+	Gene *gene1, *gene2;
 	printf("PCBMILL gene:\n");
 	/* TO DO - create a random pcbmill gene by calling create_rand_gene
 		 The length of the gene's chromosome should be TEST_ALLELE_LEN */
-
+	gene1 = gene_create_rand_gene(TEST_ALLELE_LEN, create_pcbmill_chrom);
 	/* TO DO - print the gene using gene_print */
+	gene_print(gene1);
 	printf("\nMutate: ");
 	/* TO DO - create a mutant copy of the gene using mutate_pcbmill */
 	/* TO DO - print the mutant gene using gene_print */
 	printf("\n");
 	/* TO DO - free the original gene and the mutant */
+	gene_free(gene1);
 	printf("PCBMILL genes:\n");
 	/* TO DO - create 2 random pcbmill 'parent' genes using calls
 		 to create_rand_gene
@@ -54,15 +56,13 @@ void test_minfn(void){
 	printf("\n");
 	/* TO DO - free the original gene and the mutant */
 	gene_free(gene1);
-	gene_free(gene2);
-	printf("TESTs\n" );
+	
 
 	printf("MINFN genes:\n");
 	/* TO DO - create 2 random minfn 'parent' genes using calls
 	   to create_rand_gene
 	   The length of the gene's chromosome should be TEST_ALLELE_LEN */
 	gene1 = gene_create_rand_gene(TEST_ALLELE_LEN,create_minfn_chrom);
-	printf("TESTs\n" );
 	gene2 = gene_create_rand_gene(TEST_ALLELE_LEN,create_minfn_chrom);
 	/* TO DO - print each gene */
 	printf("Parent 1 => ");
@@ -91,7 +91,7 @@ int main(int argc, char *argv[]){
 			test_minfn();
 			test_pcbmill();
 	#else
-			printf("JIA JIA\n");
+			printf("NOT DEBUG\n");
 	#endif
 	/* The only point at which srand should be called */
 	srand(SRAND_SEED);

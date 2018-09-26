@@ -6,10 +6,11 @@ OBJS = drive.o gene.o invector.o pop.o
 
 all:
 	$(CC) $(CFLAGS) *.c -o $(PROG)
+	./$(PROG)
 
 debug:
 	$(CC) $(DEBUG) -o $(PROG) *.c
-	./ga
+	./$(PROG)	
 
 clean:
 	rm -f *.o *.h.gch $(PROG)

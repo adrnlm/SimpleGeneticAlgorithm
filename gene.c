@@ -7,14 +7,23 @@
 #include "gene.h"
 
 int * create_pcbmill_chrom(int numAlleles){
-	/* TO DO */
+	int counter, *chromosome, randomValue;
+
+	/*Checker*/
+	if ((chromosome = malloc(sizeof(int) * numAlleles))==NULL)
 	return NULL;
+
+	for (counter = 0; counter < numAlleles; counter++){
+	}
+
+
+	return chromosome;
 }
 
 int * create_minfn_chrom(int numAlleles){
-	/* TO DO */
 	int counter, *chromosome;
 
+	/*Checker*/
 	if ((chromosome = malloc(sizeof(int) * numAlleles))==NULL)
 	return NULL;
 
@@ -32,8 +41,8 @@ Gene * mutate_pcbmill(Gene *g){
 
 Gene * mutate_minfn(Gene *g){
 	/* TO DO */
-	int mutatationPoint;
 	Gene *mutated_gene;
+	int mutatationPoint;
 
 	#ifdef DEBUG
 	mutatationPoint = 2;
@@ -42,9 +51,9 @@ Gene * mutate_minfn(Gene *g){
 	#endif
 
 	/*Checker*/
-	if ((mutated_gene = malloc(sizeof(Gene)))== NULL)
+	if ((mutated_gene = malloc(sizeof(Gene))) == NULL)
 	return NULL;
-	if ((mutated_gene->chromosome = malloc(sizeof(int) * g->num_alleles))== NULL)
+	if ((mutated_gene->chromosome = malloc(sizeof(int) * g->num_alleles)) == NULL)
 	return NULL;
 
 	mutated_gene->chromosome = g->chromosome;
@@ -67,7 +76,7 @@ Gene * crossover_minfn(Gene *g1, Gene *g2){
 
 	/*Debug purposes*/
 	#ifdef DEBUG
-	debugPoint = 2;
+	debugPoint = 3;
 	#else
 	debugPoint = rand() % g1->num_alleles;
 	#endif
@@ -126,11 +135,8 @@ void gene_normalise_fitness(Gene *gene, double total_fitness){
 }
 
 void gene_free(Gene *gene){
-	printf("TEST\n" );
 	free(gene->chromosome);
-	printf("TESTgs\n" );
 	free(gene);
-	printf("TESTg3\n" );
 }
 
 double gene_get_fitness(Gene *gene){

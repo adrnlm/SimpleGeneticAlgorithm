@@ -9,7 +9,7 @@
 #include "utility.h"
 #include "invector.h"
 
-/* Alleles in the chromosome for the MINFUNCT problem can have values 
+/* Alleles in the chromosome for the MINFUNCT problem can have values
  * in the range 0..29 (inclusive) */
 #define MINFN_MAX 29
 
@@ -20,9 +20,9 @@ typedef struct gene
 	int num_alleles;
 	/* Raw score is set by the chromosome evaluation function */
 	double raw_score;
-	/* The raw score is inverted and normalised to produce the fitness 
+	/* The raw score is inverted and normalised to produce the fitness
  	   The fitness is used to rank chromosomes for reproduction */
-	double fitness; 
+	double fitness;
 } Gene;
 
 /* A pointer type to a function for creating a random chromosome */
@@ -70,7 +70,7 @@ Gene * gene_create_rand_gene(int num_alleles, CreateFn create_chrom);
  * */
 void gene_calc_fitness(Gene *gene, EvalFn evaluate_fn, InVTable *invTab);
 
-/* The fitness of the gene is normalised against the population's 
+/* The fitness of the gene is normalised against the population's
  * total_fitness */
 void gene_normalise_fitness(Gene *gene, double total_fitness);
 
