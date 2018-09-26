@@ -56,7 +56,7 @@ void test_minfn(void){
 	printf("\n");
 	/* TO DO - free the original gene and the mutant */
 	gene_free(gene1);
-	
+	gene_free(gene2);
 
 	printf("MINFN genes:\n");
 	/* TO DO - create 2 random minfn 'parent' genes using calls

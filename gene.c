@@ -42,7 +42,7 @@ Gene * mutate_pcbmill(Gene *g){
 Gene * mutate_minfn(Gene *g){
 	/* TO DO */
 	Gene *mutated_gene;
-	int mutatationPoint;
+	int mutatationPoint, counter=0;
 
 	#ifdef DEBUG
 	mutatationPoint = 2;
@@ -56,7 +56,10 @@ Gene * mutate_minfn(Gene *g){
 	if ((mutated_gene->chromosome = malloc(sizeof(int) * g->num_alleles)) == NULL)
 	return NULL;
 
-	mutated_gene->chromosome = g->chromosome;
+	while (counter< g->num_alleles) {
+		mutated_gene->chromosome[counter] = g->chromosome[counter];
+		counter ++;
+	}
 	mutated_gene->num_alleles = g->num_alleles;
 	mutated_gene->raw_score = mutated_gene->fitness = 0;
 
