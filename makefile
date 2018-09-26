@@ -10,7 +10,9 @@ all:
 
 debug:
 	$(CC) $(DEBUG) -o $(PROG) *.c
-	./$(PROG)	
+	./$(PROG)
+
+
 
 clean:
 	rm -f *.o *.h.gch $(PROG)

@@ -82,4 +82,6 @@ double gene_get_fitness(Gene *gene);
  * a gene, either to file or to standard output */
 void gene_print(Gene*);
 
+Boolean checkValue();
+
 #endif
