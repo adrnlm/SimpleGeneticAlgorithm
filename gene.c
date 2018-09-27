@@ -109,7 +109,7 @@ Gene * crossover_pcbmill(Gene *g1, Gene *g2){
 	crossoverPoint1 = rand() % g2->num_alleles;
 	do {
 		crossoverPoint2 = rand() % g1->num_alleles;
-	} while((crossoverPoint1 == crossoverPoint2) && (crossoverPoint1 > crossoverPoint2));
+	} while(crossoverPoint1 > crossoverPoint2);
 	#endif
 	printf(" index1: %d index2: %d\n", crossoverPoint1, crossoverPoint2 );
 
@@ -139,7 +139,7 @@ Gene * crossover_pcbmill(Gene *g1, Gene *g2){
 }
 
 Gene * crossover_minfn(Gene *g1, Gene *g2){
-	int crossoverPoint, Point;
+	int crossoverPoint, Point, counter;
 	Gene *child_gene;
 
 	/*Debug purposes*/
@@ -155,7 +155,9 @@ Gene * crossover_minfn(Gene *g1, Gene *g2){
 	child_gene->chromosome = safeMalloc(sizeof(int) * g1->num_alleles);
 
 	/*Creating child gene*/
-	child_gene->chromosome = g1->chromosome;
+	for (counter = 0; counter < g1->num_alleles; counter ++){
+		child_gene->chromosome[counter] = g1->chromosome[counter];
+	}
 	for (crossoverPoint = Point; crossoverPoint < g1->num_alleles; crossoverPoint++){
 		child_gene->chromosome[crossoverPoint] = g2->chromosome[crossoverPoint];
 	}

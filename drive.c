@@ -12,7 +12,7 @@
 #ifdef DEBUG
 void test_pcbmill(void){
 	/* TO DO */
-	Gene *gene1, *gene2;
+	Gene *gene1, *gene2, *gene3;
 	printf("\nPCBMILL gene:\n");
 	/* TO DO - create a random pcbmill gene by calling create_rand_gene
 		 The length of the gene's chromosome should be TEST_ALLELE_LEN */
@@ -40,18 +40,19 @@ void test_pcbmill(void){
 	printf("\nCrossover: ");
 	/* TO DO produce a new gene by calling crossover_pcbmill
 		 with the parent genes */
-	gene1 = crossover_pcbmill(gene1, gene2);
+	gene3 = crossover_pcbmill(gene1, gene2);
 	/* TO DO - print the new gene */
-	gene_print(gene1);
+	gene_print(gene3);
 	printf("\n");
 	/* TO DO - free both parents and the child gene */
+	gene_free(gene3);
 	gene_free(gene2);
 	gene_free(gene1);
 }
 
 void test_minfn(void){
 	/* TO DO */
-	Gene *gene1, *gene2;
+	Gene *gene1, *gene2, *gene3;
 
 	printf("\nMINFN gene:\n");
 	/* TO DO - create a random minfn gene by calling create_rand_gene
@@ -81,28 +82,30 @@ void test_minfn(void){
 	printf("\nCrossover:");
 	/* TO DO produce a new gene by calling crossover_minfn
 	   with the parent genes */
-	gene1 = crossover_minfn(gene1, gene2);
+	gene3 = crossover_minfn(gene1, gene2);
 	/* TO DO - print the new gene */
-	gene_print(gene1);
+	gene_print(gene3);
 	printf("\n");
 	/* TO DO - free both parents and the child gene */
 	gene_free(gene1);
 	gene_free(gene2);
+	gene_free(gene3);
 }
 #endif
 
 int main(int argc, char *argv[]){
-
+	/* The only point at which srand should be called */
+	srand(SRAND_SEED);
 
 	/* TO DO */
 	#ifdef DEBUG
 			test_minfn();
 			test_pcbmill();
+		
 	#else
 			printf("NOT DEBUG\n");
 	#endif
-	/* The only point at which srand should be called */
-	srand(SRAND_SEED);
+
 
 	return EXIT_SUCCESS;
 }
