@@ -101,7 +101,7 @@ int main(int argc, char *argv[]){
 	#ifdef DEBUG
 			test_minfn();
 			test_pcbmill();
-		
+
 	#else
 			printf("NOT DEBUG\n");
 	#endif

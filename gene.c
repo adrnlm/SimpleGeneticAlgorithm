@@ -213,7 +213,9 @@ void gene_free(Gene *gene){
 
 double gene_get_fitness(Gene *gene){
 	/* TO DO */
-	return 0.0;
+	double fitness;
+	fitness = gene->fitness;
+	return fitness;
 }
 
 void gene_print(Gene *gene) {
