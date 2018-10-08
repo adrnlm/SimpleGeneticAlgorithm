@@ -1,14 +1,14 @@
 CC = gcc
-DEBUG = -DDEBUG -g -lm
-CFLAGS = -ansi -pedantic -Wall -lm
+DEBUG = -DDEBUG -g
+CFLAGS = -ansi -pedantic -Wall
 PROG = ga
 OBJS = drive.o gene.o invector.o pop.o
 
 all: $(OBJS)
-	$(CC) $(CFLAGS) *.c -o $(PROG)
+	$(CC) $(CFLAGS) *.c -o $(PROG) -lm
 
 debug:
-	$(CC) $(DEBUG) -o $(PROG) *.c
+	$(CC) $(DEBUG) -o $(PROG) *.c -lm
 
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $^

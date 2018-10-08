@@ -94,13 +94,13 @@ void test_minfn(void){
 #endif
 
 void minfn(FILE *file, int alleleSize, int popSize, int numGen){
-	Gene *gene;
-	double score;
 	int counter = 0;
 	char line[INV_LEN];
 	InVTable *newTable = NULL;
+	Pop_list *newPop;
 	newTable = safeMalloc(sizeof(InVTable));
 	invector_init(newTable);
+
 
 	printf("MINFN\n" );
 
@@ -109,12 +109,12 @@ void minfn(FILE *file, int alleleSize, int popSize, int numGen){
 	read_line(line, alleleSize, newTable->table[counter], counter);
 	newTable->width = alleleSize+1;
 
-	gene = gene_create_rand_gene(alleleSize, create_minfn_chrom);
+	pop_init(&newPop);
+	pop_set_fns(newPop, create_minfn_chrom, mutate_minfn, crossover_minfn, eval_minfn);
+	create_pop(newPop, popSize, alleleSize);
 
-	score = eval_minfn(newTable, gene);
-	printf("TEST3[%.f]\n", score);
+	print_pop_list(newPop);
 
-	gene_free(gene);
 }
 
 void pcbmill(FILE *file, int alleleSize, int popSize, int numGen){
@@ -132,6 +132,7 @@ void pcbmill(FILE *file, int alleleSize, int popSize, int numGen){
 		/*printf("TEST: %d\n", newTable->table[6][0] );*/
 	}
 }
+
 int main(int argc, char *argv[]){
 	/* TO DO */
 	#ifdef DEBUG
@@ -152,11 +153,8 @@ int main(int argc, char *argv[]){
 		checkInt(popSize);
 		checkInt(numGen);
 
-		if ( strcmp(geneType,"minfn") == FALSE ){
+		if ( strcmp(geneType,"minfn") == FALSE || strcmp(geneType,"pcbmill") == FALSE){
 			minfn(file, alleleSize, popSize, numGen);
-		}
-		else if ( strcmp(geneType,"pcbmill") == FALSE ){
-			pcbmill(file, alleleSize, popSize, numGen);
 		}
 		else{
 			printf("WRONG COMMAND\n" );
