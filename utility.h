@@ -13,12 +13,15 @@
 #include <ctype.h>
 #include <math.h>
 
-typedef enum boolean
-{
+typedef enum boolean{
     FALSE = 0,
     TRUE
 } Boolean;
 
 void *safeMalloc();
+
+int stringToInt();
+
+void checkInt();
 
 #endif

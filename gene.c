@@ -176,12 +176,24 @@ Gene * crossover_minfn(Gene *g1, Gene *g2){
 
 double eval_pcbmill(InVTable *invt, Gene *gene){
 	/* TO DO */
+
 	return 0.0;
 }
 
 double eval_minfn(InVTable *invt, Gene *gene){
 	/* TO DO */
-	return 0.0;
+	int counter, value1, value2;
+	double score = 0, tempScore =0;
+
+	for (counter=0; counter<invt->width; counter++){
+		value1 = invt->table[0][counter];
+		value2 = gene->chromosome[counter];
+		tempScore += (value1 * value2);
+	}
+	counter--;
+	score = fabs(tempScore - (invt->table[0][counter]));
+
+	return score;
 }
 
 Gene * gene_create_rand_gene(int numAlleles, CreateFn create_chrom){

@@ -1,6 +1,6 @@
 CC = gcc
-DEBUG = -DDEBUG -g
-CFLAGS = -ansi -pedantic -Wall
+DEBUG = -DDEBUG -g -lm
+CFLAGS = -ansi -pedantic -Wall -lm
 PROG = ga
 OBJS = drive.o gene.o invector.o pop.o
 
@@ -14,7 +14,7 @@ debug:
 	$(CC) $(CFLAGS) -c $^
 
 run:
-	./$(PROG)	
+	./$(PROG)
 
 clean:
 	rm -f *.o *.h.gch $(PROG)

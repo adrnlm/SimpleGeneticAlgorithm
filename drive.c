@@ -93,17 +93,77 @@ void test_minfn(void){
 }
 #endif
 
-int main(int argc, char *argv[]){
-	/* The only point at which srand should be called */
-	srand(SRAND_SEED);
+void minfn(FILE *file, int alleleSize, int popSize, int numGen){
+	Gene *gene;
+	double score;
+	int counter = 0;
+	char line[INV_LEN];
+	InVTable *newTable = NULL;
+	newTable = safeMalloc(sizeof(InVTable));
+	invector_init(newTable);
 
+	printf("MINFN\n" );
+
+	fgets(line, sizeof(line), file);
+
+	read_line(line, alleleSize, newTable->table[counter], counter);
+	newTable->width = alleleSize+1;
+
+	gene = gene_create_rand_gene(alleleSize, create_minfn_chrom);
+
+	score = eval_minfn(newTable, gene);
+	printf("TEST3[%.f]\n", score);
+
+	gene_free(gene);
+}
+
+void pcbmill(FILE *file, int alleleSize, int popSize, int numGen){
+	int counter = 0;
+	char line[INV_LEN];
+	InVTable *newTable = NULL;
+	newTable = safeMalloc(sizeof(InVTable));
+	invector_init(newTable);
+
+	printf("PCBMILL\n" );
+
+	while (fgets(line, sizeof(line), file) != NULL) {
+		read_line(line, alleleSize, newTable->table[counter], counter);
+		counter++;
+		/*printf("TEST: %d\n", newTable->table[6][0] );*/
+	}
+}
+int main(int argc, char *argv[]){
 	/* TO DO */
 	#ifdef DEBUG
+		printf("DEBUG\n");
 			test_minfn();
 			test_pcbmill();
-
 	#else
-			printf("NOT DEBUG\n");
+		char *geneType = argv[1], *inputFile = argv[5];
+		int alleleSize = stringToInt(argv[2]), popSize = stringToInt(argv[3]), numGen = stringToInt(argv[4]);
+		FILE *file;
+		file = fopen(inputFile,"r");
+
+		/* The only point at which srand should be called */
+		srand(SRAND_SEED);
+		printf("NOT DEBUG\n");
+
+		checkInt(alleleSize);
+		checkInt(popSize);
+		checkInt(numGen);
+
+		if ( strcmp(geneType,"minfn") == FALSE ){
+			minfn(file, alleleSize, popSize, numGen);
+		}
+		else if ( strcmp(geneType,"pcbmill") == FALSE ){
+			pcbmill(file, alleleSize, popSize, numGen);
+		}
+		else{
+			printf("WRONG COMMAND\n" );
+			exit(0);
+		}
+
+
 	#endif
 
 
