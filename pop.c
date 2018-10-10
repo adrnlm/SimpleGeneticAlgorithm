@@ -34,14 +34,14 @@ Pop_node *create_node(Pop_list *pop, int numAlleles){
 	return newNode;
 }
 
-void add_node(Pop_list *pop, Pop_node *node){
+void add_node(Pop_list *pop, Pop_node *newNode){
 	if (pop->head == NULL){
-		pop->head = node;
+		pop->head = newNode;
 		pop->count++;
 	}
 	else{
-		node->next = pop->head;
-		pop->head = node;
+		newNode->next = pop->head;
+		pop->head = newNode;
 	}
 
 }
@@ -63,4 +63,23 @@ void print_pop_list(Pop_list *popList){
         gene_print(current->gene);
         current = current->next;
     }
+}
+
+void free_Pop(Pop_list *pop){
+	Pop_node *head = pop->head;
+	Pop_node *pointer = pop->head;
+	int i = 1;
+
+	while (head->next != NULL){
+		printf("%d\n",i );
+
+		pointer = head->next;
+		free(head->gene);
+		free(head);
+		head = pointer;
+		i++;
+	}
+	printf("%d\n",i );
+	free(pointer->gene);
+	free(pointer);
 }

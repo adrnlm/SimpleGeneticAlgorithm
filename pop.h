@@ -50,4 +50,5 @@ Pop_node *create_node();
 void add_node();
 void create_pop();
 void print_pop_list();
+void free_Pop();
 #endif

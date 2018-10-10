@@ -114,6 +114,7 @@ void minfn(FILE *file, int alleleSize, int popSize, int numGen){
 	create_pop(newPop, popSize, alleleSize);
 
 	print_pop_list(newPop);
+	free_Pop(newPop);
 
 }
 
