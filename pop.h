@@ -46,9 +46,11 @@ void pop_set_fns(Pop_list *p,CreateFn cf,MutateFn mf,CrossOverFn cof,EvalFn ef);
 void pop_print_fittest(Pop_list *p);
 
 /* TO DO - other functions as appropriate */
+void normalise_pop_fitness();
 Pop_node *create_node();
 void add_node();
 void create_pop();
 void print_pop_list();
 void free_Pop();
+void sort_pop();
 #endif

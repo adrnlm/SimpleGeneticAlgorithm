@@ -111,9 +111,10 @@ void minfn(FILE *file, int alleleSize, int popSize, int numGen){
 
 	pop_init(&newPop);
 	pop_set_fns(newPop, create_minfn_chrom, mutate_minfn, crossover_minfn, eval_minfn);
-	create_pop(newPop, popSize, alleleSize);
-
+	create_pop(newPop, popSize, alleleSize, newTable);
+	normalise_pop_fitness(newPop);
 	print_pop_list(newPop);
+	pop_print_fittest(newPop);
 	free_Pop(newPop);
 
 }
