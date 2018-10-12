@@ -31,35 +31,25 @@ void pop_print_fittest(Pop_list *p){
 
 void normalise_pop_fitness(Pop_list *pop){
 	Pop_node *pointer = pop->head;
-	double totalFitness = 0, testfit = 0;
+	double totalFitness = 0;
 	int j = 1;
 	int i = 1;
 	/*Calculate total fitness*/
 	while (pointer->next != NULL) {
-		printf("1TEST %d\n",j );
 		j++;
 		totalFitness += pointer->gene->fitness;
 		pointer = pointer->next;
 	}
-	printf("1TEST %d\n\n",j );
 	totalFitness += pointer->gene->fitness;
 	/*Normalising population fitness*/
 
 	pointer = pop->head;
 	while (pointer->next != NULL) {
-		printf("2TEST %d\n",i );
 		i++;
 		gene_normalise_fitness(pointer->gene, totalFitness);
-
-		testfit += pointer->gene->fitness;
-
 		pointer = pointer->next;
 	}
-	printf("2TEST %d\n\n",i );
 	gene_normalise_fitness(pointer->gene, totalFitness);
-
-	testfit += pointer->gene->fitness;
-	printf("TOTAL FITNESS: %f\n", testfit);
 }
 
 Pop_node *create_node(Pop_list *pop, int numAlleles, InVTable *invTab){
@@ -78,17 +68,19 @@ void add_node(Pop_list *pop, Pop_node *newNode){
 	else{
 		newNode->next = pop->head;
 		pop->head = newNode;
+		pop->count++;
 	}
-
 }
 
-void create_pop(Pop_list *pop, int popSize, int geneWidth, InVTable *invTab){
+void create_first_gen(Pop_list *pop, int popSize, int geneWidth, InVTable *invTab){
 	int counter;
 	for (counter = 0; counter <popSize; counter++){
 		add_node(pop, create_node(pop, geneWidth, invTab));
 	}
 	/*Sort the pop upon creation*/
 	sort_pop(pop);
+	/*Normalise pop fitness */
+	normalise_pop_fitness(pop);
 }
 
 void print_pop_list(Pop_list *popList){
@@ -104,22 +96,17 @@ void print_pop_list(Pop_list *popList){
 }
 
 void free_Pop(Pop_list *pop){
-	Pop_node *head = pop->head;
 	Pop_node *pointer = pop->head;
-	int i = 1;
 
-	while (head->next != NULL){
-		printf("%d\n",i );
-
-		pointer = head->next;
-		free(head->gene);
-		free(head);
-		head = pointer;
-		i++;
+	while (pointer->next != NULL){
+		pop->head = pointer->next;
+		gene_free(pointer->gene);
+		free(pointer);
+		pointer = pop->head;
 	}
-	printf("%d\n",i );
-	free(pointer->gene);
+	gene_free(pointer->gene);
 	free(pointer);
+	free(pop);
 }
 
 void sort_pop(Pop_list *pop){
@@ -144,4 +131,78 @@ void sort_pop(Pop_list *pop){
 		}
 		pointer = pop->head;
 	}
+}
+
+void newGeneration(Pop_list *parent_gen, Pop_list *child_gen, InVTable *invTab){
+	Gene *geneZ = NULL;
+	Pop_node *fittest = safeMalloc(sizeof(Pop_node));
+	int counter = 1;
+	/*Duplicate population size*/
+	child_gen->count = parent_gen->count;
+	/*Ensuring the fittest survive from parent_gen*/
+	fittest->gene = copy_gene(parent_gen->head->gene);
+	fittest->next = NULL;
+	child_gen->head = fittest;
+	while(counter<child_gen->count){
+		/*Find first random gene through roulette*/
+		Gene *geneX = roulette_gene(parent_gen);
+		/*If percentage is 5% or below, mutate it*/
+		if(randomPercentage() <= 5){
+			geneZ = parent_gen->mutate_gene(geneX);
+			gene_calc_fitness(geneZ, parent_gen->evaluate_fn, invTab);
+			increase_pop(child_gen, geneZ, invTab);
+		}
+		else{
+			/*Find second random gene through roulette*/
+			Gene *geneY = roulette_gene(parent_gen);
+			/*Crossoever geneX and geneY */
+			geneZ = parent_gen->crossover_genes(geneX,geneY);
+			gene_calc_fitness(geneZ, parent_gen->evaluate_fn, invTab);
+			increase_pop(child_gen, geneZ, invTab);
+		}
+		counter ++;
+	}
+	sort_pop(child_gen);
+	normalise_pop_fitness(child_gen);
+}
+
+void increase_pop(Pop_list *pop, Gene *newGene, InVTable *invTab){
+	Pop_node *newNode = safeMalloc(sizeof(Pop_node));
+	newNode->gene = newGene;
+	gene_calc_fitness(newNode->gene, pop->evaluate_fn, invTab);
+	newNode->next = pop->head;
+	pop->head = newNode;
+}
+
+Gene *copy_gene(Gene *gene){
+	Gene *copy = safeMalloc(sizeof(Gene));
+	int num_alleles = gene->num_alleles;
+	copy->num_alleles = gene->num_alleles;
+	copy->chromosome = safeMalloc(sizeof(int)*num_alleles);
+	memcpy(copy->chromosome,gene->chromosome,sizeof(int)*num_alleles);
+	copy->fitness = gene->fitness;
+	copy->raw_score = gene->raw_score;
+	return copy;
+}
+
+Gene *roulette_gene(Pop_list *pop){
+	Pop_node *pointer = pop->head;
+	double randomFitness = MAX_RANGE * (((double)rand()) / (double)((unsigned)RAND_MAX));
+	double fitnessSum = 0.00;
+	while (pointer!=NULL){
+		fitnessSum += gene_get_fitness(pointer->gene);
+		if (fitnessSum >= randomFitness){
+			Gene *selection = copy_gene(pointer->gene);
+			return selection;
+		}
+		else
+			pointer = pointer->next;
+	}
+	return NULL;
+}
+
+void switch_current_pop(Pop_list *currentPop, Pop_list *nextPop){
+	Pop_node *tmpHead = currentPop->head;
+	currentPop->head = nextPop->head;
+	nextPop->head = tmpHead;
 }

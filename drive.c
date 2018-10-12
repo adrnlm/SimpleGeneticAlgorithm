@@ -97,26 +97,44 @@ void minfn(FILE *file, int alleleSize, int popSize, int numGen){
 	int counter = 0;
 	char line[INV_LEN];
 	InVTable *newTable = NULL;
-	Pop_list *newPop;
+	Pop_list *currentGen = NULL;
+	Pop_list *nextGen = NULL;
 	newTable = safeMalloc(sizeof(InVTable));
 	invector_init(newTable);
-
-
-	printf("MINFN\n" );
 
 	fgets(line, sizeof(line), file);
 
 	read_line(line, alleleSize, newTable->table[counter], counter);
 	newTable->width = alleleSize+1;
 
-	pop_init(&newPop);
-	pop_set_fns(newPop, create_minfn_chrom, mutate_minfn, crossover_minfn, eval_minfn);
-	create_pop(newPop, popSize, alleleSize, newTable);
-	normalise_pop_fitness(newPop);
-	print_pop_list(newPop);
-	pop_print_fittest(newPop);
-	free_Pop(newPop);
-
+	while (counter < popSize){
+		if (counter == 0){
+			/*Initialise new population*/
+			pop_init(&currentGen);
+			/*Prepare pop for MINFN*/
+			pop_set_fns(currentGen, create_minfn_chrom, mutate_minfn, crossover_minfn, eval_minfn);
+			/*Create first generation*/
+			create_first_gen(currentGen, popSize, alleleSize, newTable);
+			/*Print first generation*/
+			printf("Gen %d: ", counter);
+			pop_print_fittest(currentGen);
+			printf("TEST1\n" );
+			print_pop_list(currentGen);
+		}
+		else {
+			pop_init(&nextGen);
+			pop_set_fns(nextGen, create_minfn_chrom, mutate_minfn, crossover_minfn, eval_minfn);
+			newGeneration(currentGen, nextGen, newTable);
+			switch_current_pop(currentGen, nextGen);
+			printf("Gen %d: ", counter);
+			pop_print_fittest(currentGen);
+			printf("TEST 2\n" );
+			print_pop_list(currentGen);
+			free_Pop(nextGen);
+		}
+		counter++;
+	}
+	free_Pop(currentGen);
 }
 
 void pcbmill(FILE *file, int alleleSize, int popSize, int numGen){
@@ -168,4 +186,17 @@ int main(int argc, char *argv[]){
 
 
 	return EXIT_SUCCESS;
+}
+
+void set_function(char *type, Pop_list *pop){
+	if(strcmp(type,CMD_ARG_MINFN)==0){
+			pop_set_fns(pop, create_minfn_chrom, mutate_minfn, crossover_minfn, eval_minfn);
+	}
+	else if (strcmp(type,CMD_ARG_PCBMILL)==0){
+		pop_set_fns(pop, create_pcbmill_chrom, mutate_pcbmill, crossover_pcbmill, eval_pcbmill);
+	}
+	else{
+		printf("WRONG COMMAND\n" );
+		exit(0);
+	}
 }

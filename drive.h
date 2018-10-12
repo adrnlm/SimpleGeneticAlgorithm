@@ -31,5 +31,5 @@ enum argtype {geneType = 1, alleleSize, popSize, numGen, inputFile, outputFile};
  * compilation */
 void test_pcbmill(void);
 void test_minfn(void);
-
+void set_function();
 #endif

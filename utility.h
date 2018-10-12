@@ -24,4 +24,6 @@ int stringToInt();
 
 void checkInt();
 
+int randomPercentage();
+
 #endif

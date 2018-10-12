@@ -11,6 +11,7 @@
 #include "invector.h"
 
 #define MUTATE_RATE 5
+#define MAX_RANGE 1.0
 
 typedef struct pop_node {
 	Gene *gene;
@@ -49,8 +50,13 @@ void pop_print_fittest(Pop_list *p);
 void normalise_pop_fitness();
 Pop_node *create_node();
 void add_node();
-void create_pop();
+void create_first_gen();
 void print_pop_list();
 void free_Pop();
 void sort_pop();
+void newGeneration();
+void increase_pop();
+Gene *copy_gene();
+Gene *roulette_gene();
+void switch_current_pop();
 #endif

@@ -32,3 +32,7 @@ void checkInt(int input){
     exit(0);
   }
 }
+
+int randomPercentage(){
+  return (rand() % 100 + 1);
+}
