@@ -43,8 +43,10 @@ int read_line(char *line, int numOfPar, InVector array, int lineNumber){
   }
   current = strtok(NULL, ",)");
   if(strcmp(current, "\n") !=0 ){
-    printf("\n[COUNT MISMATCH: %d] \n", numOfPar );
-    exit(0);
+    if(strcmp(current, "\0") !=0){
+      printf("\n[COUNT MISMATCH: %d] \n", numOfPar );
+      exit(0);
+    }
   }
   return lineNumber;
 }

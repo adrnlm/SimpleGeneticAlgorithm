@@ -107,7 +107,7 @@ void minfn(FILE *file, int alleleSize, int popSize, int numGen){
 	read_line(line, alleleSize, newTable->table[counter], counter);
 	newTable->width = alleleSize+1;
 
-	while (counter < popSize){
+	while (counter < numGen){
 		if (counter == 0){
 			/*Initialise new population*/
 			pop_init(&currentGen);
@@ -118,8 +118,6 @@ void minfn(FILE *file, int alleleSize, int popSize, int numGen){
 			/*Print first generation*/
 			printf("Gen %d: ", counter);
 			pop_print_fittest(currentGen);
-			printf("TEST1\n" );
-			print_pop_list(currentGen);
 		}
 		else {
 			pop_init(&nextGen);
@@ -128,8 +126,6 @@ void minfn(FILE *file, int alleleSize, int popSize, int numGen){
 			switch_current_pop(currentGen, nextGen);
 			printf("Gen %d: ", counter);
 			pop_print_fittest(currentGen);
-			printf("TEST 2\n" );
-			print_pop_list(currentGen);
 			free_Pop(nextGen);
 		}
 		counter++;

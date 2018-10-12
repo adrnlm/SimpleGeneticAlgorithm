@@ -79,7 +79,6 @@ Gene * mutate_minfn(Gene *g){
 	#else
 	mutatationPoint = rand() % g->num_alleles;
 	#endif
-	printf(" index: %d\n", mutatationPoint );
 
 	/*Memory Allocation*/
 	mutated_gene = safeMalloc(sizeof(Gene));
@@ -155,7 +154,6 @@ Gene * crossover_minfn(Gene *g1, Gene *g2){
 	#else
 	Point = rand() % g1->num_alleles;
 	#endif
-	printf(" index: %d\n", Point-1 );
 
 	/*Memory Allocation*/
 	child_gene = safeMalloc(sizeof(Gene));
@@ -182,16 +180,18 @@ double eval_pcbmill(InVTable *invt, Gene *gene){
 
 double eval_minfn(InVTable *invt, Gene *gene){
 	/* TO DO */
-	int counter, value1, value2;
-	double score = 0, tempScore =0;
-
-	for (counter=0; counter<invt->width; counter++){
+	int counter, value1, value2, tempScore = 0;
+	double score = 0;
+	int width = invt->width - 1;
+	for (counter=0; counter<width; counter++){
 		value1 = invt->table[0][counter];
+
 		value2 = gene->chromosome[counter];
+
 		tempScore += (value1 * value2);
 	}
-	counter--;
-	score = fabs(tempScore - (invt->table[0][counter]));
+
+	score = abs(tempScore - (invt->table[0][counter]));
 
 	return score;
 }
