@@ -6,7 +6,8 @@
 
 #include "utility.h"
 
-void * safeMalloc(size_t size){
+void * safeMalloc(size_t size)
+{
   void *p = malloc(size);
 
   if (p == NULL){
@@ -16,7 +17,8 @@ void * safeMalloc(size_t size){
   return p;
 }
 
-int stringToInt(char *string){
+int stringToInt(char *string)
+{
   int integer;
   char *endPtr = NULL;
   integer = strtol(string, &endPtr, 10);
@@ -30,6 +32,7 @@ int stringToInt(char *string){
   return integer;
 }
 
-int randomPercentage(){
+int randomPercentage()
+{
   return (rand() % 100 + 1);
 }

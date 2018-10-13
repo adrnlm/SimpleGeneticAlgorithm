@@ -47,16 +47,41 @@ void pop_set_fns(Pop_list *p,CreateFn cf,MutateFn mf,CrossOverFn cof,EvalFn ef);
 void pop_print_fittest(Pop_list *p);
 
 /* TO DO - other functions as appropriate */
-void normalise_pop_fitness();
+
+/*Create a new node*/
 Pop_node *create_node();
+
+/*Add node to a population list*/
 void add_node();
+
+/*Create the initial generation*/
 void create_first_gen();
-void print_pop_list();
-void free_Pop();
-void sort_pop();
-void newGeneration();
+
+/*Create a new generation*/
+void new_generation();
+
+/*Increase the population*/
 void increase_pop();
-Gene *copy_gene();
+
+/*Select a random gene*/
 Gene *roulette_gene();
+
+/*Normalise the fitness of the population*/
+void normalise_pop_fitness();
+
+/*Utilize bubble-sort to sort the genes based on fittest first*/
+void sort_pop();
+
+/*Produce a copy of a given gene*/
+Gene *copy_gene();
+
+/*Switch the pointer between two population*/
 void switch_current_pop();
+
+/*Print the popluation*/
+void print_pop_list();
+
+/*Free the population*/
+void free_Pop();
+
 #endif

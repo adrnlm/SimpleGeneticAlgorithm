@@ -18,10 +18,13 @@ typedef enum boolean{
     TRUE
 } Boolean;
 
+/*Allocate memory*/
 void *safeMalloc();
 
+/*Convert an array of characters to integers*/
 int stringToInt();
 
+/*Produce a random percentage*/
 int randomPercentage();
 
 #endif

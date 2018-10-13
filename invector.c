@@ -13,31 +13,34 @@ void invector_init(InVTable *invt) {
   invt->width = 0;
 }
 
-int read_line(char *line, int numOfPar, InVector array, int lineNumber, char *geneType){
+int read_line(char *line, int numOfPar, InVector array, int lineNumber, char
+*geneType)
+{
   char *current;
   int counter, maxSize, points;
-
-  current = strtok(line, ":");
-  if (strcmp(current, "InputVector") != 0){
+  /*Check if the initial spelling is correct*/
+  current = strtok(line, INV_DELIM1);
+  if (strcmp(current, INV_LABEL) != 0){
     printf("[WRONG FORMAT]\n");
     return -1;
   }
-
-  current = strtok(NULL, "(");
+  /*Check if the line number is in correct order*/
+  current = strtok(NULL, INV_DELIM2);
   points = stringToInt(current);
   if (points != lineNumber){
     printf("[WRONG LINE NUMBER]\n");
     return -1;
   }
-
+  /*Checks what size to give depending on the gene type*/
   if (strcmp(geneType,CMD_ARG_MINFN)==0){
     maxSize = numOfPar+1;
   }
   else{
     maxSize = 2;
   }
+  /*Count all the points in the input vector and store them in the array*/
   for (counter=0; counter<maxSize; counter++){
-    current = strtok(NULL, ",)");
+    current = strtok(NULL, INV_DELIM3);
     if(strcmp(current, "\n") ==0 || strcmp(current, "\0") ==0){
       printf("[COUNT MISMATCH: %d] \n", numOfPar );
       return -1;
@@ -49,11 +52,11 @@ int read_line(char *line, int numOfPar, InVector array, int lineNumber, char *ge
     }
     array[counter] = points;
   }
-
-  current = strtok(NULL, ",)");
+  /*Check the last point if the count is correct*/
+  current = strtok(NULL, INV_DELIM3);
   if(strcmp(current, "\n") !=0 ){
     if(strcmp(current, "\0") !=0){
-      printf("\n[COUNT MISMATCH: %d] \n", numOfPar );
+      printf("[COUNT MISMATCH: %d] \n", numOfPar );
       return -1;
     }
   }

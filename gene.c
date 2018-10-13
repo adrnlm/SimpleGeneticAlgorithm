@@ -6,7 +6,8 @@
 
 #include "gene.h"
 
-int * create_pcbmill_chrom(int numAlleles){
+int * create_pcbmill_chrom(int numAlleles)
+{
 	int counter, *chromosome, randomValue;
 
 	/*Memory Allocation*/
@@ -21,7 +22,8 @@ int * create_pcbmill_chrom(int numAlleles){
 	return chromosome;
 }
 
-int * create_minfn_chrom(int numAlleles){
+int * create_minfn_chrom(int numAlleles)
+{
 	int counter, *chromosome;
 
 	/*Memory Allocation*/
@@ -34,7 +36,8 @@ int * create_minfn_chrom(int numAlleles){
 	return chromosome;
 }
 
-Gene * mutate_pcbmill(Gene *g){
+Gene * mutate_pcbmill(Gene *g)
+{
 	Gene *mutated_gene;
 	int mutationPoint1, mutationPoint2, counter=0, tempPoint;
 
@@ -70,7 +73,8 @@ Gene * mutate_pcbmill(Gene *g){
 	return mutated_gene;
 }
 
-Gene * mutate_minfn(Gene *g){
+Gene * mutate_minfn(Gene *g)
+{
 	Gene *mutated_gene;
 	int mutatationPoint, counter=0;
 
@@ -97,7 +101,8 @@ Gene * mutate_minfn(Gene *g){
 	return mutated_gene;
 }
 
-Gene * crossover_pcbmill(Gene *g1, Gene *g2){
+Gene * crossover_pcbmill(Gene *g1, Gene *g2)
+{
 	int crossoverPoint1=0, crossoverPoint2=0, counter=0, stopPoint=0, sizeOfCrossover=0;
 	Gene *child_gene=NULL;
 
@@ -146,7 +151,8 @@ Gene * crossover_pcbmill(Gene *g1, Gene *g2){
 	return child_gene;
 }
 
-Gene * crossover_minfn(Gene *g1, Gene *g2){
+Gene * crossover_minfn(Gene *g1, Gene *g2)
+{
 	int crossoverPoint, Point, counter;
 	Gene *child_gene;
 
@@ -175,8 +181,8 @@ Gene * crossover_minfn(Gene *g1, Gene *g2){
 	return child_gene;
 }
 
-double eval_pcbmill(InVTable *invt, Gene *gene){
-	/* TO DO */
+double eval_pcbmill(InVTable *invt, Gene *gene)
+{
 	int curPtr, nextPtr;
 	double evaluation = 0;
 	for (curPtr = 0; curPtr<gene->num_alleles; curPtr++){
@@ -188,23 +194,23 @@ double eval_pcbmill(InVTable *invt, Gene *gene){
 		corA = gene->chromosome[curPtr];
 		corB = gene->chromosome[nextPtr];
 
-		distance = sqrt((pow((invt->table[corB][0])-(invt->table[corA][0]),2)+pow((invt->table[corB][1])-(invt->table[corA][1]),2)));
+		/*Formula based of the given specification*/
+		distance =
+		sqrt((pow((invt->table[corB][0])-(invt->table[corA][0]),2)+pow((invt->table[corB][1])-(invt->table[corA][1]),2)));
 
 		evaluation += distance;
 	}
 	return evaluation;
 }
 
-double eval_minfn(InVTable *invt, Gene *gene){
-	/* TO DO */
+double eval_minfn(InVTable *invt, Gene *gene)
+{
 	int counter, value1, value2, tempScore = 0;
 	double score = 0;
 	int width = invt->width - 1;
 	for (counter=0; counter<width; counter++){
 		value1 = invt->table[0][counter];
-
 		value2 = gene->chromosome[counter];
-
 		tempScore += (value1 * value2);
 	}
 
@@ -213,7 +219,8 @@ double eval_minfn(InVTable *invt, Gene *gene){
 	return score;
 }
 
-Gene * gene_create_rand_gene(int numAlleles, CreateFn create_chrom){
+Gene * gene_create_rand_gene(int numAlleles, CreateFn create_chrom)
+{
 	Gene *random_gene=NULL;
 
 	/*Memory Allocation*/
@@ -227,23 +234,24 @@ Gene * gene_create_rand_gene(int numAlleles, CreateFn create_chrom){
 	return random_gene;
 }
 
-void gene_calc_fitness(Gene *gene, EvalFn evaluate_fn, InVTable *invTab){
+void gene_calc_fitness(Gene *gene, EvalFn evaluate_fn, InVTable *invTab)
+{
 	gene->raw_score = evaluate_fn(invTab, gene);
 	gene->fitness = 1/(gene->raw_score + 1.0);
-
 }
 
-void gene_normalise_fitness(Gene *gene, double total_fitness){
+void gene_normalise_fitness(Gene *gene, double total_fitness)
+{
 	gene->fitness = gene_get_fitness(gene)/total_fitness;
 }
 
-void gene_free(Gene *gene){
+void gene_free(Gene *gene)
+{
 	free(gene->chromosome);
 	free(gene);
 }
 
 double gene_get_fitness(Gene *gene){
-	/* TO DO */
 	double fitness;
 	fitness = gene->fitness;
 	return fitness;

@@ -49,8 +49,8 @@ typedef struct invector_table
 void invector_init(InVTable *invt);
 
 /* TO DO - other functions as appropriate */
-void inputVector();
-int read_line();
 
+/*Read one line from the file*/
+int read_line();
 
 #endif

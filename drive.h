@@ -31,9 +31,22 @@ enum argtype {geneType = 1, alleleSize, popSize, numGen, inputFile, outputFile};
  * compilation */
 void test_pcbmill(void);
 void test_minfn(void);
-void genetic_algorithm();
-int get_allele_size();
+
+/*These are the main functions*/
+
+/*This is to check if the given arguments are valid*/
 Boolean check_arguments();
+
+/*Read the entire file*/
 void read_file();
+
+/*Set the function based on the gene type given by the user*/
 void set_function();
+
+/*Run the genetic algorithm programs*/
+void genetic_algorithm();
+
+/*Get the allele size based on the gene type given by the user*/
+int get_allele_size();
+
 #endif
