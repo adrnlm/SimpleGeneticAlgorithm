@@ -42,13 +42,13 @@ Gene * mutate_pcbmill(Gene *g){
 	#ifdef DEBUG
 	mutationPoint1 = 2;
 	mutationPoint2 = 4;
+	printf(" index1: %d index2: %d\n", mutationPoint1, mutationPoint2 );
 	#else
 	mutationPoint1 = rand() % g->num_alleles;
 	do {
 		mutationPoint2 = rand() % g->num_alleles;
 	} while(mutationPoint2 == mutationPoint1);
 	#endif
-	printf(" index1: %d index2: %d\n", mutationPoint1, mutationPoint2 );
 
 	/*Memory Allocation*/
 	mutated_gene = safeMalloc(sizeof(Gene));
@@ -76,6 +76,7 @@ Gene * mutate_minfn(Gene *g){
 
 	#ifdef DEBUG
 	mutatationPoint = 2;
+	printf(" mutaion point: %d\n", mutatationPoint );
 	#else
 	mutatationPoint = rand() % g->num_alleles;
 	#endif
@@ -104,13 +105,14 @@ Gene * crossover_pcbmill(Gene *g1, Gene *g2){
 	#ifdef DEBUG
 	crossoverPoint1 = 2;
 	crossoverPoint2 = 4;
+	printf(" index1: %d index2: %d\n", crossoverPoint1, crossoverPoint2 );
 	#else
 	crossoverPoint1 = rand() % g2->num_alleles;
 	do {
 		crossoverPoint2 = rand() % g1->num_alleles;
 	} while(crossoverPoint1 > crossoverPoint2);
 	#endif
-	printf(" index1: %d index2: %d\n", crossoverPoint1, crossoverPoint2 );
+
 
 	/*Memory Allocation*/
 	child_gene = safeMalloc(sizeof(Gene));
@@ -151,6 +153,7 @@ Gene * crossover_minfn(Gene *g1, Gene *g2){
 	/*Debug purposes*/
 	#ifdef DEBUG
 	Point = 3;
+	printf(" crossover point: %d\n", Point );
 	#else
 	Point = rand() % g1->num_alleles;
 	#endif
@@ -174,8 +177,22 @@ Gene * crossover_minfn(Gene *g1, Gene *g2){
 
 double eval_pcbmill(InVTable *invt, Gene *gene){
 	/* TO DO */
+	int curPtr, nextPtr;
+	double evaluation = 0;
+	for (curPtr = 0; curPtr<gene->num_alleles; curPtr++){
+		int corA, corB;
+		double distance;
+		nextPtr = curPtr;
+		nextPtr++;
 
-	return 0.0;
+		corA = gene->chromosome[curPtr];
+		corB = gene->chromosome[nextPtr];
+
+		distance = sqrt((pow((invt->table[corB][0])-(invt->table[corA][0]),2)+pow((invt->table[corB][1])-(invt->table[corA][1]),2)));
+
+		evaluation += distance;
+	}
+	return evaluation;
 }
 
 double eval_minfn(InVTable *invt, Gene *gene){
@@ -213,6 +230,7 @@ Gene * gene_create_rand_gene(int numAlleles, CreateFn create_chrom){
 void gene_calc_fitness(Gene *gene, EvalFn evaluate_fn, InVTable *invTab){
 	gene->raw_score = evaluate_fn(invTab, gene);
 	gene->fitness = 1/(gene->raw_score + 1.0);
+
 }
 
 void gene_normalise_fitness(Gene *gene, double total_fitness){

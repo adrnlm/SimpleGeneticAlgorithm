@@ -21,16 +21,13 @@ int stringToInt(char *string){
   char *endPtr = NULL;
   integer = strtol(string, &endPtr, 10);
   if ( string == endPtr || *endPtr != '\0'){
+    if(string == NULL){
+      perror("Error: invector string invalid");
+      exit(EXIT_FAILURE);
+    }
     return -1;
   }
   return integer;
-}
-
-void checkInt(int input){
-  if(input == -1){
-    printf("[WRONG PARAMETERS}\n");
-    exit(0);
-  }
 }
 
 int randomPercentage(){

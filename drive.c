@@ -93,95 +93,140 @@ void test_minfn(void){
 }
 #endif
 
-void minfn(FILE *file, int alleleSize, int popSize, int numGen){
-	int counter = 0;
-	char line[INV_LEN];
-	InVTable *newTable = NULL;
-	Pop_list *currentGen = NULL;
-	Pop_list *nextGen = NULL;
-	newTable = safeMalloc(sizeof(InVTable));
-	invector_init(newTable);
-
-	fgets(line, sizeof(line), file);
-
-	read_line(line, alleleSize, newTable->table[counter], counter);
-	newTable->width = alleleSize+1;
-
-	while (counter < numGen){
-		if (counter == 0){
-			/*Initialise new population*/
-			pop_init(&currentGen);
-			/*Prepare pop for MINFN*/
-			pop_set_fns(currentGen, create_minfn_chrom, mutate_minfn, crossover_minfn, eval_minfn);
-			/*Create first generation*/
-			create_first_gen(currentGen, popSize, alleleSize, newTable);
-			/*Print first generation*/
-			printf("Gen %d: ", counter);
-			pop_print_fittest(currentGen);
-		}
-		else {
-			pop_init(&nextGen);
-			pop_set_fns(nextGen, create_minfn_chrom, mutate_minfn, crossover_minfn, eval_minfn);
-			newGeneration(currentGen, nextGen, newTable);
-			switch_current_pop(currentGen, nextGen);
-			printf("Gen %d: ", counter);
-			pop_print_fittest(currentGen);
-			free_Pop(nextGen);
-		}
-		counter++;
-	}
-	free_Pop(currentGen);
-}
-
-void pcbmill(FILE *file, int alleleSize, int popSize, int numGen){
-	int counter = 0;
-	char line[INV_LEN];
-	InVTable *newTable = NULL;
-	newTable = safeMalloc(sizeof(InVTable));
-	invector_init(newTable);
-
-	printf("PCBMILL\n" );
-
-	while (fgets(line, sizeof(line), file) != NULL) {
-		read_line(line, alleleSize, newTable->table[counter], counter);
-		counter++;
-		/*printf("TEST: %d\n", newTable->table[6][0] );*/
-	}
-}
-
 int main(int argc, char *argv[]){
+	InVTable *invTab;
+	int allele_Size;
+	int pop_Size = stringToInt(argv[popSize]);
+	int num_Gen = stringToInt(argv[numGen]);
+	char *input_File = argv[inputFile];
+	FILE *file = fopen(input_File, "r");
+	invTab = safeMalloc(sizeof(InVTable));
+	invector_init(invTab);
+
 	/* TO DO */
 	#ifdef DEBUG
 		printf("DEBUG\n");
 			test_minfn();
 			test_pcbmill();
 	#else
-		char *geneType = argv[1], *inputFile = argv[5];
-		int alleleSize = stringToInt(argv[2]), popSize = stringToInt(argv[3]), numGen = stringToInt(argv[4]);
-		FILE *file;
-		file = fopen(inputFile,"r");
-
 		/* The only point at which srand should be called */
 		srand(SRAND_SEED);
 		printf("NOT DEBUG\n");
 
-		checkInt(alleleSize);
-		checkInt(popSize);
-		checkInt(numGen);
-
-		if ( strcmp(geneType,"minfn") == FALSE || strcmp(geneType,"pcbmill") == FALSE){
-			minfn(file, alleleSize, popSize, numGen);
+		if (check_arguments(argc, argv, file, invTab) == TRUE){
+			if(argc == CMD_ARG_MAX){
+	        file = freopen(argv[outputFile],"w",stdout);
+	        if( file == NULL){
+	            return EXIT_FAILURE;
+	        }
+	    }
+			allele_Size = get_allele_size(argv[geneType], invTab);
+			genetic_algorithm(invTab, argv[geneType], allele_Size, pop_Size, num_Gen);
+			fclose(file);
+			free(invTab);
 		}
-		else{
-			printf("WRONG COMMAND\n" );
-			exit(0);
-		}
-
-
 	#endif
 
-
 	return EXIT_SUCCESS;
+}
+
+void genetic_algorithm(InVTable *invTab, char *gene_Type, int allele_Size, int pop_Size, int num_Gen){
+	int counter = 0;
+	Pop_list *currentGen, *nextGen;
+
+	while(counter<num_Gen){
+		if(counter == 0){
+			pop_init(&currentGen);
+
+			set_function(gene_Type,currentGen);
+			create_first_gen(currentGen,pop_Size,allele_Size,invTab);
+		}
+		else{
+			pop_init(&nextGen);
+			set_function(gene_Type,nextGen);
+			newGeneration(currentGen,nextGen);
+			switch_current_pop(currentGen, nextGen);
+			free_Pop(nextGen);
+		}
+		normalise_pop_fitness(currentGen,invTab);
+		sort_pop(currentGen);
+		pop_print_fittest(currentGen);
+		counter++;
+	}
+	free_Pop(currentGen);
+
+}
+
+void read_file(char* argv[], FILE *file, InVTable *invTab){
+	char line[INV_LEN];
+	int numOfPar = stringToInt(argv[alleleSize]);
+	int lineNumber = 0, counter = 0;
+	char *gene_Type = argv[geneType];
+	while(fgets(line, INV_LEN, file ) != NULL){
+
+		if(read_line(line, numOfPar, invTab->table[counter], lineNumber, gene_Type) == -1){
+			perror("Error");
+			fclose(file);
+			exit(EXIT_FAILURE);
+		}
+		lineNumber++;
+		invTab->tot ++;
+		counter++;
+	}
+	if (strcmp(gene_Type,CMD_ARG_PCBMILL) == 0){
+		if(numOfPar != invTab->tot){
+			printf("[COUNT MISMATCH: %d] \n", numOfPar );
+			exit(EXIT_FAILURE);
+		}
+	}
+}
+
+int get_allele_size(char *gene_Type, InVTable *invTab ){
+	if(strcmp(gene_Type,CMD_ARG_MINFN)==0){
+			return invTab->width-1;
+	}
+	else if (strcmp(gene_Type,CMD_ARG_PCBMILL)==0){
+			return invTab->tot;
+	}
+	return -1;
+}
+
+Boolean check_arguments(int argc, char *argv[], FILE *file, InVTable *invTab ){
+	char *gene_Type = argv[geneType];
+	int arg_Allele = stringToInt(argv[alleleSize]);
+	int arg_Pop = stringToInt(argv[popSize]);
+
+	if(!(argc == CMD_ARG_MAX || argc == CMD_ARG_MAX - 1)){
+		printf("Invalid number of arguments\n");
+		exit(EXIT_FAILURE);
+	}
+	if(file == NULL){
+		printf("Invalid file\n");
+		exit(EXIT_FAILURE);
+	}
+	if(strcmp(gene_Type,CMD_ARG_MINFN)!=0 && strcmp(gene_Type,CMD_ARG_PCBMILL)!=0){
+		printf("Invalid gene type\n");
+		exit(EXIT_FAILURE);
+	}
+	if(strcmp(gene_Type,CMD_ARG_MINFN)==0){
+		if(arg_Allele <=0 || arg_Allele >= INVT_WIDTH){
+			printf("Invalid second argument\n");
+			exit(EXIT_FAILURE);
+		}
+	}
+	if(strcmp(gene_Type,CMD_ARG_PCBMILL)==0){
+		if(arg_Allele <0 || arg_Allele > INVT_MAX){
+			printf("Invalid second argument\n");
+			exit(EXIT_FAILURE);
+		}
+	}
+	if(arg_Pop <2){
+		printf("Too little population\n");
+		exit(EXIT_FAILURE);
+	}
+	read_file(argv, file, invTab);
+	invTab->width = arg_Allele+1;
+	return TRUE;
 }
 
 void set_function(char *type, Pop_list *pop){

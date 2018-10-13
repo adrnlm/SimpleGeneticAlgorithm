@@ -33,6 +33,7 @@ void normalise_pop_fitness(Pop_list *pop, InVTable *invTab){
 	Pop_node *pointer = pop->head;
 	double totalFitness = 0;
 	/*Calculate total fitness*/
+
 	while ( pointer != NULL) {
 		gene_calc_fitness(pointer->gene, pop->evaluate_fn, invTab);
 		totalFitness += pointer->gene->fitness;
@@ -72,9 +73,7 @@ void create_first_gen(Pop_list *pop, int popSize, int geneWidth, InVTable *invTa
 		add_node(pop, create_node(pop, geneWidth));
 	}
 	/*Normalise pop fitness */
-	normalise_pop_fitness(pop, invTab);
-	/*Sort the pop upon creation*/
-	sort_pop(pop);
+
 
 }
 
@@ -93,14 +92,13 @@ void print_pop_list(Pop_list *popList){
 void free_Pop(Pop_list *pop){
 	Pop_node *pointer = pop->head;
 
-	while (pointer->next != NULL){
+	while (pointer != NULL){
 		pop->head = pointer->next;
 		gene_free(pointer->gene);
 		free(pointer);
 		pointer = pop->head;
 	}
-	gene_free(pointer->gene);
-	free(pointer);
+	pop->head = NULL;
 	free(pop);
 }
 
@@ -128,51 +126,52 @@ void sort_pop(Pop_list *pop){
 	}
 }
 
-void newGeneration(Pop_list *parent_gen, Pop_list *child_gen, InVTable *invTab){
-	Gene *geneZ = NULL;
+void newGeneration(Pop_list *parent_gen, Pop_list *child_gen){
+
+	Gene *geneZ;
+
 	Pop_node *fittest = safeMalloc(sizeof(Pop_node));
 	int counter = 1;
 	/*Duplicate population size*/
-	child_gen->count = parent_gen->count;
+
 	/*Ensuring the fittest survive from parent_gen*/
 	fittest->gene = copy_gene(parent_gen->head->gene);
-	fittest->next = NULL;
-	child_gen->head = fittest;
-	while(counter<child_gen->count){
-		/*Find first random gene through roulette*/
+	add_node(child_gen,fittest);
+
+	while(counter<parent_gen->count){
+
+				/*Find first random gene through roulette*/
 		Gene *geneX = roulette_gene(parent_gen);
+
 		/*If percentage is 5% or below, mutate it*/
 		if(randomPercentage() <= 5){
 			geneZ = parent_gen->mutate_gene(geneX);
-			increase_pop(child_gen, geneZ, invTab);
+			increase_pop(child_gen, geneZ);
 		}
 		else{
 			/*Find second random gene through roulette*/
 			Gene *geneY = roulette_gene(parent_gen);
 			/*Crossoever geneX and geneY */
 			geneZ = parent_gen->crossover_genes(geneX,geneY);
-			increase_pop(child_gen, geneZ, invTab);
+			increase_pop(child_gen, geneZ);
 		}
 		counter ++;
 	}
-	normalise_pop_fitness(child_gen, invTab);
-	sort_pop(child_gen);
-	print_pop_list(child_gen);
+
 }
 
-void increase_pop(Pop_list *pop, Gene *newGene, InVTable *invTab){
+void increase_pop(Pop_list *pop, Gene *newGene){
 	Pop_node *newNode = safeMalloc(sizeof(Pop_node));
 	newNode->gene = newGene;
-	newNode->next = pop->head;
-	pop->head = newNode;
+ 	add_node(pop,newNode);
 }
 
 Gene *copy_gene(Gene *gene){
 	Gene *copy = safeMalloc(sizeof(Gene));
 	int num_alleles = gene->num_alleles;
 	copy->num_alleles = gene->num_alleles;
-	copy->chromosome = safeMalloc(sizeof(int)*num_alleles);
-	memcpy(copy->chromosome,gene->chromosome,sizeof(int)*num_alleles);
+	copy->chromosome = safeMalloc(sizeof(int*)*num_alleles);
+	memcpy(copy->chromosome,gene->chromosome,sizeof(int*)*num_alleles);
 	copy->fitness = gene->raw_score = 0;
 	return copy;
 }
