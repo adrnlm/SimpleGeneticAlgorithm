@@ -174,7 +174,7 @@ Gene *copy_gene(Gene *gene)
 	Gene *copy = safeMalloc(sizeof(Gene));
 	int num_alleles = gene->num_alleles;
 	copy->num_alleles = gene->num_alleles;
-	copy->chromosome = safeMalloc(sizeof(int*)*num_alleles);
+	copy->chromosome = safeMalloc(sizeof(int)*num_alleles);
 
 	/*Making sure to copy the chromosome to the gene copy*/
 	memcpy(copy->chromosome,gene->chromosome,sizeof(int)*num_alleles);

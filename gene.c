@@ -16,7 +16,7 @@ int * create_pcbmill_chrom(int numAlleles)
 	for (counter = 0; counter < numAlleles; counter++){
 		do {
 			randomValue = rand() % numAlleles;
-		} while( checkValue(chromosome, counter, randomValue)==FALSE );
+		} while( checkValue(chromosome, counter, randomValue)==0 );
 		chromosome[counter] = randomValue;
 	}
 	return chromosome;
@@ -183,9 +183,10 @@ Gene * crossover_minfn(Gene *g1, Gene *g2)
 
 double eval_pcbmill(InVTable *invt, Gene *gene)
 {
-	int curPtr, nextPtr;
+	int curPtr, nextPtr, max_count = gene->num_alleles-1;
 	double evaluation = 0;
-	for (curPtr = 0; curPtr<gene->num_alleles; curPtr++){
+
+	for (curPtr = 0; curPtr<max_count; curPtr++){
 		int corA, corB;
 		double distance;
 		nextPtr = curPtr;

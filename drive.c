@@ -12,7 +12,6 @@
 #ifdef DEBUG
 void test_pcbmill(void)
 {
-	/* TO DO */
 	Gene *gene1, *gene2, *gene3;
 	printf("\nPCBMILL gene:\n");
 	/* TO DO - create a random pcbmill gene by calling create_rand_gene
@@ -98,33 +97,39 @@ void test_minfn(void)
 int main(int argc, char *argv[])
 {
 	InVTable *invTab;
-	int allele_Size;
-	int pop_Size = stringToInt(argv[popSize]);
-	int num_Gen = stringToInt(argv[numGen]);
-	char *input_File = argv[inputFile];
-	FILE *file = fopen(input_File, "r");
 	invTab = safeMalloc(sizeof(InVTable));
 	invector_init(invTab);
+	/* The only point at which srand should be called */
+	srand(SRAND_SEED);
 
-	/* TO DO */
 	#ifdef DEBUG
 		printf("DEBUG\n");
 			test_minfn();
 			test_pcbmill();
+			free(invTab);
 	#else
-		/* The only point at which srand should be called */
-		srand(SRAND_SEED);
+		/*Check initial number or aguments*/
+		if(!(argc == CMD_ARG_MAX || argc == CMD_ARG_MAX - 1)){
+			printf("Wrong argument format\n");
+			free(invTab);
+			exit(EXIT_FAILURE);
+		}
 
-		if (check_arguments(argc, argv, file, invTab) == TRUE){
+		if (check_arguments(argv, invTab) == TRUE){
+			int allele_Size;
+			int pop_Size = stringToInt(argv[popSize]);
+			int num_Gen = stringToInt(argv[numGen]);
+
 			if(argc == CMD_ARG_MAX){
-	        file = freopen(argv[outputFile],"w",stdout);
-	        if( file == NULL){
-	            return EXIT_FAILURE;
-	        }
+	      FILE *file = freopen(argv[outputFile],"w",stdout);
+	      if(file == NULL){
+					free(invTab);
+	        return EXIT_FAILURE;
+	      }
 	    }
+
 			allele_Size = get_allele_size(argv[geneType], invTab);
 			genetic_algorithm(invTab, argv[geneType], allele_Size, pop_Size, num_Gen);
-			fclose(file);
 			free(invTab);
 		}
 	#endif
@@ -132,42 +137,50 @@ int main(int argc, char *argv[])
 	return EXIT_SUCCESS;
 }
 
-Boolean check_arguments(int argc, char *argv[], FILE *file, InVTable *invTab )
+Boolean check_arguments(char *argv[], InVTable *invTab )
 {
+	FILE *file = fopen(argv[inputFile], "r");
 	char *gene_Type = argv[geneType];
 	int arg_Allele = stringToInt(argv[alleleSize]);
 	int arg_Pop = stringToInt(argv[popSize]);
 
-	if(!(argc == CMD_ARG_MAX || argc == CMD_ARG_MAX - 1)){
-		printf("Wrong argument format\n");
-		exit(EXIT_FAILURE);
-	}
 	if(file == NULL){
 		printf("Invalid file\n");
+		fclose(file);
+		free(invTab);
 		exit(EXIT_FAILURE);
 	}
 	if(strcmp(gene_Type,CMD_ARG_MINFN)!=0 && strcmp(gene_Type,CMD_ARG_PCBMILL)!=0){
 		printf("Invalid gene type\n");
+		fclose(file);
+		free(invTab);
 		exit(EXIT_FAILURE);
 	}
 	if(strcmp(gene_Type,CMD_ARG_MINFN)==0){
 		if(arg_Allele <=0 || arg_Allele >= INVT_WIDTH){
 			printf("Invalid second argument\n");
+			fclose(file);
+			free(invTab);
 			exit(EXIT_FAILURE);
 		}
 	}
 	if(strcmp(gene_Type,CMD_ARG_PCBMILL)==0){
 		if(arg_Allele <0 || arg_Allele > INVT_MAX){
 			printf("Invalid second argument\n");
+			fclose(file);
+			free(invTab);
 			exit(EXIT_FAILURE);
 		}
 	}
 	if(arg_Pop <2){
 		printf("Too little population\n");
+		fclose(file);
+		free(invTab);
 		exit(EXIT_FAILURE);
 	}
 	read_file(argv, file, invTab);
 	invTab->width = arg_Allele+1;
+	fclose(file);
 	return TRUE;
 }
 
@@ -181,6 +194,7 @@ void read_file( char* argv[], FILE *file, InVTable *invTab)
 
 		if(read_line(line, numOfPar, invTab->table[counter], lineNumber, gene_Type) == -1){
 			printf("Wrong Argumnet Format");
+			free(invTab);
 			fclose(file);
 			exit(EXIT_FAILURE);
 		}
@@ -192,6 +206,7 @@ void read_file( char* argv[], FILE *file, InVTable *invTab)
 	if (strcmp(gene_Type,CMD_ARG_PCBMILL) == 0){
 		if(numOfPar != invTab->tot){
 			printf("[COUNT MISMATCH: %d] \n", numOfPar );
+			free(invTab);
 			exit(EXIT_FAILURE);
 		}
 	}
