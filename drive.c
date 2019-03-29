@@ -40,7 +40,7 @@ void test_pcbmill(void)
 	printf("\nCrossover: ");
 	/* TO DO produce a new gene by calling crossover_pcbmill
 		 with the parent genes */
-	gene3 = crossover_pcbmill(gene1, gene2);
+	gene3 = crossover_pcbmill(gene1, gene2);t
 	/* TO DO - print the new gene */
 	gene_print(gene3);
 	printf("\n");
